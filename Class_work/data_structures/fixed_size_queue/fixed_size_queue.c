@@ -135,37 +135,27 @@ int FixedSizeQueue_peek(const FixedSizeQueue *queue, error_t *error){
 
     bool empty = FixedSizeStack_is_empty(queue -> out, error);
     assert(SUCCESS == *error);
-    if(true == empty){
-        empty = FixedSizeStack_is_empty(queue -> in, error);
-        assert(SUCCESS == *error);
-        if(true == empty){
-            *error = COLLECTION_IS_EMPTY_ERROR;
-            return 0;
-        }
-        else{
-            element = FixedSizeStack_peek(queue -> in, error);
-            assert(SUCCESS == *error);
-        }
-
+    if(false == empty){
+        element = FixedSizeStack_peek(queue -> out, error);
     }
     else{
-        int tmp_element;
-        for(; true != empty; quantity++){
-            tmp_element = FixedSizeStack_pop(queue -> out, error);
+        empty = FixedSizeStack_is_empty(queue -> in, error);
+        if(true == empty){
+            if(NULL != error){
+                *error = COLLECTION_IS_EMPTY_ERROR;
+            }
+            return 0;
+        }
+        for(; true != empty;){
+            element = FixedSizeStack_pop(queue -> in, error);
             assert(SUCCESS == *error);
-            FixedSizeStack_push(queue -> in, tmp_element, error);
+            FixedSizeStack_push(queue -> out, element, error);
             assert(SUCCESS == *error);
-            empty = FixedSizeStack_is_empty(queue -> out, error);
+            empty = FixedSizeStack_is_empty(queue -> in, error);
             assert(SUCCESS == *error);
         }
-        element = FixedSizeStack_peek(queue -> in, error);
+        element = FixedSizeStack_peek(queue -> out, error);
         assert(SUCCESS == *error);
-        for(; 0 != quantity; quantity--){
-            tmp_element = FixedSizeStack_pop(queue -> in, error);
-            assert(SUCCESS == *error);
-            FixedSizeStack_push(queue -> out, tmp_element, error);
-            assert(SUCCESS == *error);
-        }
     }
     assert(SUCCESS == *error);
     return element;

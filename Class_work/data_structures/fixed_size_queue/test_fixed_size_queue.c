@@ -7,8 +7,9 @@
 #define DATA_SIZE 9
 
 int main(){
-    size_t limit = 7;
+    size_t limit = 9;
     error_t error = SUCCESS;
+    size_t size_queue = 0;
     
     FixedSizeQueue *queue = FixedSizeQueue_new(limit, &error);
     assert(NULL != queue);
@@ -26,7 +27,7 @@ int main(){
 
     int num = FixedSizeQueue_peek(queue, &error);
     assert(SUCCESS == error);
-    assert(4 == num);
+    assert(1 == num);
 
     FixedSizeQueue_print(queue, &error);
     assert(SUCCESS == error);
@@ -36,8 +37,9 @@ int main(){
     assert(NULL != queue);
     assert(SUCCESS == error);
 
-    FixedSizeQueue_dequeue(queue, &error);
+    num = FixedSizeQueue_dequeue(queue, &error);
     assert(SUCCESS == error);
+    assert(1 == num);
     assert(3 == FixedSizeQueue_get_size(queue, &error));
 
     FixedSizeQueue_print(queue, &error);
@@ -46,12 +48,23 @@ int main(){
 
     num = FixedSizeQueue_peek(queue, &error);
     assert(SUCCESS == error);
-    assert(4 == num);
+    assert(2 == num);
 
     is_queue_empty = FixedSizeQueue_is_empty(queue, &error);
     assert(not is_queue_empty);
     assert(NULL != queue);
     assert(SUCCESS == error);
+
+    for(; i < DATA_SIZE; i++){
+        FixedSizeQueue_enqueue(queue, data[i], &error);
+        assert(SUCCESS == error);
+    }
+
+    size_queue = FixedSizeQueue_get_size(queue, &error);
+    assert(SUCCESS == error);
+    assert(8 == size_queue);
+
+
 
     FixedSizeQueue_delete(&queue, &error);
     assert(SUCCESS == error);
