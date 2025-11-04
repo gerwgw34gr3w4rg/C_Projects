@@ -2,6 +2,12 @@
 #include <iso646.h>
 
 
+struct FixedSizeStack {
+    int *buffer;
+    size_t buffer_size; // максимальное количество элементов
+    size_t size; // текущее количество элементов
+};
+
 FixedSizeStack *FixedSizeStack_new(size_t buffer_size, error_t *error){
     
     assert(NULL != error);
@@ -44,6 +50,7 @@ void FixedSizeStack_delete(FixedSizeStack **stack_pointer, error_t *error){
     free(*stack_pointer);
     *stack_pointer = NULL;
 }
+
 
 void FixedSizeStack_push(FixedSizeStack *stack, int data, error_t *error){
     assert(NULL != error);
@@ -149,27 +156,6 @@ bool FixedSizeStack_is_empty(const FixedSizeStack *stack, error_t *error){
     return 0 == stack -> size;
 }
 
-int FixedSizeStack_peek_Stop(FixedSizeStack *stack, error_t *error){ // посмотерть первый элемент стека
-    assert(NULL != error);
-    if(NULL != error){
-        *error = SUCCESS;
-    }
-    if(NULL == stack or NULL == stack -> buffer){
-        if(NULL != error){
-            *error = NULL_POINTER_ERROR;
-        }
-        return 0;
-    }
-    if(0 == stack -> size){
-        if(NULL != error){
-            *error = COLLECTION_IS_EMPTY_ERROR;
-        }
-        return 0;
-    }
-
-    return stack -> buffer[0];
-}
-
 void FixedSizeStack_print(const FixedSizeStack *stack, error_t *error){
     assert(NULL != error);
     if(NULL != error){
@@ -188,11 +174,11 @@ void FixedSizeStack_print(const FixedSizeStack *stack, error_t *error){
         return;
     }
 
-    //printf("bottom| ");
+    printf("bottom| ");
     for(size_t i = 0; i < stack -> size; i++){
         printf("%d, ", stack -> buffer[i]);
     }
-    //printf("| top\n");
+    printf("| top\n");
 }
 
 void FixedSizeStack_reverse_print(const FixedSizeStack *stack, error_t *error){
@@ -213,9 +199,10 @@ void FixedSizeStack_reverse_print(const FixedSizeStack *stack, error_t *error){
         return;
     }
     
-    //printf("top| ");
+    printf("top| ");
     for(size_t i = 0; i < stack -> size; i++){
         printf("%d, ", stack -> buffer[stack -> size - i - 1]);
     }
-    //printf(" |bottom\n");
+    printf(" |bottom\n");
+
 }

@@ -10,12 +10,7 @@
 
 #include "error.h"
 
-
-typedef struct {
-    int *buffer;
-    size_t buffer_size; // максимальное количество элементов
-    size_t size; // текущее количество элементов
-} FixedSizeStack;
+typedef struct FixedSizeStack FixedSizeStack;
 
 
 FixedSizeStack *FixedSizeStack_new(size_t buffer_size, error_t *error); // создание стека

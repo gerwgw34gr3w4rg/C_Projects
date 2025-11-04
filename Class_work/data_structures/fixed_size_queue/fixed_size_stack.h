@@ -10,12 +10,7 @@
 
 #include "error.h"
 
-
-typedef struct {
-    int *buffer;
-    size_t buffer_size; // максимальное количество элементов
-    size_t size; // текущее количество элементов
-} FixedSizeStack;
+typedef struct FixedSizeStack FixedSizeStack;
 
 
 FixedSizeStack *FixedSizeStack_new(size_t buffer_size, error_t *error); // создание стека
@@ -26,8 +21,6 @@ int FixedSizeStack_pop(FixedSizeStack *stack, error_t *error); // взять п�
 int FixedSizeStack_peek(FixedSizeStack *stack, error_t *error); // посмотерть верхний элемент стека
 size_t FixedSizeStack_get_size(FixedSizeStack *stack, error_t *error); // колличество элементов в стеке
 bool FixedSizeStack_is_empty(const FixedSizeStack *stack, error_t *error); // проверка пустой стек или нет
-
-int FixedSizeStack_peek_Stop(FixedSizeStack *stack, error_t *error); // посмотерть первый элемент стека
 
 void FixedSizeStack_print(const FixedSizeStack *stack, error_t *error);
 void FixedSizeStack_reverse_print(const FixedSizeStack *stack, error_t *error);

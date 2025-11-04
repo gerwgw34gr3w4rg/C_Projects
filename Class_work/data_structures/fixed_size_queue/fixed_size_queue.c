@@ -130,6 +130,58 @@ int FixedSizeQueue_peek(const FixedSizeQueue *queue, error_t *error){
         return 0;
     }
 
+    int quantity = 0;
+    int element = 0;
+
+    bool empty = FixedSizeStack_is_empty(queue -> out, error);
+    assert(SUCCESS == *error);
+    if(true == empty){
+        empty = FixedSizeStack_is_empty(queue -> in, error);
+        assert(SUCCESS == *error);
+        if(true == empty){
+            *error = COLLECTION_IS_EMPTY_ERROR;
+            return 0;
+        }
+        else{
+            element = FixedSizeStack_peek(queue -> in, error);
+            assert(SUCCESS == *error);
+        }
+
+    }
+    else{
+        int tmp_element;
+        for(; true != empty; quantity++){
+            tmp_element = FixedSizeStack_pop(queue -> out, error);
+            assert(SUCCESS == *error);
+            FixedSizeStack_push(queue -> in, tmp_element, error);
+            assert(SUCCESS == *error);
+            empty = FixedSizeStack_is_empty(queue -> out, error);
+            assert(SUCCESS == *error);
+        }
+        element = FixedSizeStack_peek(queue -> in, error);
+        assert(SUCCESS == *error);
+        for(; 0 != quantity; quantity--){
+            tmp_element = FixedSizeStack_pop(queue -> in, error);
+            assert(SUCCESS == *error);
+            FixedSizeStack_push(queue -> out, tmp_element, error);
+            assert(SUCCESS == *error);
+        }
+    }
+    assert(SUCCESS == *error);
+    return element;
+
+#if 0
+    assert(NULL != error);
+    if(NULL != error){
+        *error = SUCCESS;
+    }
+    if(NULL == queue){
+        if(NULL != error){
+            *error = NULL_POINTER_ERROR;
+        }
+        return 0;
+    }
+
     bool stack_element = FixedSizeStack_is_empty(queue -> out, error);
     int element;
     if(true == stack_element){
@@ -145,6 +197,8 @@ int FixedSizeQueue_peek(const FixedSizeQueue *queue, error_t *error){
     //elemtnt = queue -> out -> buffer[0];
     element = FixedSizeStack_peek_Stop(queue -> out, error); // посмотерть верхний элемент стека
     return element;
+
+#endif
 }
 
 size_t FixedSizeQueue_get_size(const FixedSizeQueue *queue, error_t *error){
