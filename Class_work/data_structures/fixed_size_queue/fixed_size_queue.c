@@ -79,18 +79,7 @@ void FixedSizeQueue_enqueue(FixedSizeQueue *queue, int data, error_t *error){
     return;
 }
 
-int FixedSizeQueue_dequeue(FixedSizeQueue *queue, error_t *error){
-    assert(NULL != error);
-    if(NULL != error){
-        *error = SUCCESS;
-    }
-    if(NULL == queue){
-        if(NULL != error){
-            *error = NULL_POINTER_ERROR;
-        }
-        return 0;
-    }
-    
+void __transfer_data_between_stacks(FixedSizeQueue *queue, error_t *error){
     bool is_empty;
     bool is_out_empty = FixedSizeStack_is_empty(queue -> out, error);
     assert(SUCCESS == *error);
@@ -102,7 +91,7 @@ int FixedSizeQueue_dequeue(FixedSizeQueue *queue, error_t *error){
             if(NULL != error){
                 *error = COLLECTION_IS_EMPTY_ERROR;
             }
-            return 0;
+            return;
         }
         while(not is_empty){
             data = FixedSizeStack_pop(queue -> in, error);
@@ -113,12 +102,28 @@ int FixedSizeQueue_dequeue(FixedSizeQueue *queue, error_t *error){
             assert(SUCCESS == *error);
         }
     }
-    data = FixedSizeStack_pop(queue -> out, error);
+}
+
+int FixedSizeQueue_dequeue(FixedSizeQueue *queue, error_t *error){
+    assert(NULL != error);
+    if(NULL != error){
+        *error = SUCCESS;
+    }
+    if(NULL == queue){
+        if(NULL != error){
+            *error = NULL_POINTER_ERROR;
+        }
+        return 0;
+    }
+
+    __transfer_data_between_stacks(queue, error);
+    
+    int data = FixedSizeStack_pop(queue -> out, error);
     assert(SUCCESS == *error);
     return data;
 }
 
-int FixedSizeQueue_peek(const FixedSizeQueue *queue, error_t *error){
+int FixedSizeQueue_peek(FixedSizeQueue *queue, error_t *error){
     assert(NULL != error);
     if(NULL != error){
         *error = SUCCESS;
@@ -130,65 +135,11 @@ int FixedSizeQueue_peek(const FixedSizeQueue *queue, error_t *error){
         return 0;
     }
 
-    int quantity = 0;
-    int element = 0;
-
-    bool empty = FixedSizeStack_is_empty(queue -> out, error);
+    __transfer_data_between_stacks(queue, error);
+    
+    int data = FixedSizeStack_peek(queue -> out, error);
     assert(SUCCESS == *error);
-    if(false == empty){
-        element = FixedSizeStack_peek(queue -> out, error);
-    }
-    else{
-        empty = FixedSizeStack_is_empty(queue -> in, error);
-        if(true == empty){
-            if(NULL != error){
-                *error = COLLECTION_IS_EMPTY_ERROR;
-            }
-            return 0;
-        }
-        for(; true != empty;){
-            element = FixedSizeStack_pop(queue -> in, error);
-            assert(SUCCESS == *error);
-            FixedSizeStack_push(queue -> out, element, error);
-            assert(SUCCESS == *error);
-            empty = FixedSizeStack_is_empty(queue -> in, error);
-            assert(SUCCESS == *error);
-        }
-        element = FixedSizeStack_peek(queue -> out, error);
-        assert(SUCCESS == *error);
-    }
-    assert(SUCCESS == *error);
-    return element;
-
-#if 0
-    assert(NULL != error);
-    if(NULL != error){
-        *error = SUCCESS;
-    }
-    if(NULL == queue){
-        if(NULL != error){
-            *error = NULL_POINTER_ERROR;
-        }
-        return 0;
-    }
-
-    bool stack_element = FixedSizeStack_is_empty(queue -> out, error);
-    int element;
-    if(true == stack_element){
-        stack_element = FixedSizeStack_is_empty(queue -> in, error);
-        if(true == stack_element){
-            *error = COLLECTION_IS_EMPTY_ERROR;
-            return 0;
-        }
-        element = FixedSizeStack_peek(queue -> in, error);
-        return element;
-    }
-
-    //elemtnt = queue -> out -> buffer[0];
-    element = FixedSizeStack_peek_Stop(queue -> out, error); // посмотерть верхний элемент стека
-    return element;
-
-#endif
+    return data;
 }
 
 size_t FixedSizeQueue_get_size(const FixedSizeQueue *queue, error_t *error){

@@ -1,5 +1,5 @@
-#ifndef singly_LINKED_LIST_H
-#define singly_LINCED_LIST_H
+#ifndef SINGLY_LINKED_LIST_H
+#define SINGLY_LINCED_LIST_H
 
 
 #include <stdlib.h>
@@ -9,23 +9,15 @@
 
 #include "error.h"
 
+typedef struct SinglyLinkedListNode SinglyLinkedListNode;
 
 
-typedef struct SinglyLinkedListNode_s {
-    int data;
-    struct SinglyLinkedListNode_s *next;
-} SinglyLinkedListNode;
-
-
-typedef struct SinglyLinkedList_s {
-    SinglyLinkedListNode *head;
-    SinglyLinkedListNode *tail;
-    size_t size;
-} SinglyLinkedList;
+//Circular singly linked list
+typedef struct SinglyLinkedList SinglyLinkedList;
 
 
 SinglyLinkedList *SinglyLinkedList_new(error_t *error);
-void SinglyLinkedList_delete(SinglyLinkedList **list, error_t *error);
+void SinglyLinkedList_destruct(SinglyLinkedList **list, error_t *error);
 
 size_t SinglyLinkedList_get_size(const SinglyLinkedList *list, error_t *error);
 SinglyLinkedListNode *SinglyLinkedList_get_head(SinglyLinkedList *list, error_t *error);

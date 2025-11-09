@@ -22,7 +22,7 @@ void FixedSizeQueue_delete(FixedSizeQueue **queue_pointer, error_t *error); // �
 
 void FixedSizeQueue_enqueue(FixedSizeQueue *queue, int data, error_t *error); // положить элемент в конец очереди
 int FixedSizeQueue_dequeue(FixedSizeQueue *queue, error_t *error); // взять элемент из начала очереди
-int FixedSizeQueue_peek(const FixedSizeQueue *queue, error_t *error); // посмотерть элемент в начале очереди
+int FixedSizeQueue_peek(FixedSizeQueue *queue, error_t *error); // посмотерть элемент в начале очереди
 size_t FixedSizeQueue_get_size(const FixedSizeQueue *queue, error_t *error); // колличество элементов в очереди
 bool FixedSizeQueue_is_empty(const FixedSizeQueue *queue, error_t *error); // проверка пустая очередь или нет
 

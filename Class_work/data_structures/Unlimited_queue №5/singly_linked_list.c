@@ -269,7 +269,7 @@ void SinglyLinkedList_print(const SinglyLinkedList *list, error_t *error){
         *error = SUCCESS;
     }
     if (NULL == list -> head) {
-        printf("\n");
+        //printf("\n");
         return ;
     }
     SinglyLinkedListNode *node = list -> head;
@@ -277,5 +277,5 @@ void SinglyLinkedList_print(const SinglyLinkedList *list, error_t *error){
         printf("%d, ", node -> data);
         node = node -> next;
     }
-    printf("%d\n", node -> data);
+    printf("%d", node -> data);
 }
